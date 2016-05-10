@@ -1,0 +1,317 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Docker demo</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/white.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/github.css">
+
+    <!-- Custom tweaks -->
+    <link rel="stylesheet" href="css/custom.css">
+
+    <link rel="icon" type="image/png" href="img/favicons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="img/favicons/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="img/favicons/favicon-16x16.png" sizes="16x16">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <img src="img/simons-cat-tiny.png" class="simon" />
+      <div class="slides">
+
+        <section>
+          <img src="img/docker-logo.png" />
+        </section>
+
+        <section>
+          <h3>Build, Ship, Run</h3>
+          <p>
+            An open <span class="mark">platform</span> for <span class="mark">distributed</span><br>
+            applications for <span class="yes">developers</span> and <span class="no">sysadmins</span>.
+          </p>
+          
+          <aside class="notes" data-markdown>
+            This talk will tough on a bit of all the parts but mostely Build since you need to know how to do that before you can ship any containers.
+            Although we will run an actual application, running it in a production environment is out of scope for this presentation.
+            
+            * Have anyone __heard of__ Docker?
+            * Have anyoe __tried/used__ Docker?
+          </aside>
+        </section>
+
+        <section>
+          <h3>Questions?!</h3>
+          
+          <aside class="notes" data-markdown>
+            If you have something that needs clarification please ask, otherwise please keep your questions to the end and I'll try and answer them as best I can.
+            This is mostly because I prefer it that way to keep some flow.
+          </aside>
+        </section>
+
+        <section>
+          <img src="img/meme-troll.png" width="50%" />
+          <aside class="notes" data-markdown>
+            I'm standing here today and introducing Docker to you because I was forced by some people in this room *kappa*.
+            Cheap laughs I know... but really...
+          </aside>
+        </section>
+        
+        <section>
+          <h3 class="no">I ain't</h3>
+          <p>A Docker expert<br>
+            Not nervous in front of people</p>
+          <h3 class="yes">I am</h3>
+          <p>Curious about stuff and things<br>
+            Interested in sharing what I know</p>
+          <aside class="notes" data-markdown>
+            I first heard of Docker from a former college of mine and I was quite intreged with what you could do with it.
+            However I am not an expert. I am somewhat nervous talking infront of a lot of people, but you look line kind ppls so I'm sure I'll be fine.
+            I am though: a curious persion and I like to test things out and if it involves the command line the more fun it is.
+            Also I'm trying out learning by showing and sharing.
+          </aside>
+        </section>
+        
+        <section>
+          <h3 class="no">Won't</h3>
+          <p>Low level details on OS kernels<br>
+            Advanced environments and automation</p>
+          <h3 class="yes">Will</h3>
+          <p>Basic concepts important to understand docker<br>
+            Demo of the basic commands<br>
+            Demo of simple .NET Core 1.0 application</p>
+          <aside class="notes" data-markdown>
+            There a lot to talk about when it comes to the topic, but I will be leaving some more technical details unvisited. Like real low level kernel stuff. Also I'd like for people to stay awake. I will talk a bit about where Docker comes from which will contain some nerdy stuff though.
+            
+            Myself I'm at a point when I'm starting to see some cool things you can do with docker and I though I show you some of them.
+            And also we are at a point in time when companies have started using Docker for business critical applications, primarly those who are especially concerned with being able to scale quickly and also maintain a high accessability. I.e. streaming services as Viaplay and Spotify.
+            
+            So I thought I'd show of some basic things you can do. I have a few slides, but then we'll be hands on with some actual work in the command line.
+            Now let's dive into it.
+          </aside>
+        </section>
+
+        <section>
+          <h3>Docker <span class="no">!==</span> a virtual machine!</h3>
+          <table>
+            <tr>
+              <td><img class="fragment" src="img/what-is-vm-diagram.png" /></td>
+              <td><img class="fragment" src="img/what-is-docker-diagram.png" /></td>
+            </tr>
+          </table>
+          
+          <aside class="notes" data-markdown>
+            Before we get into the details.
+            * How many have used a virtual machine?
+
+            Virtual machine: Hardware, Host, Hypervisor, Guest OS lives on top of this containing libs and apps.
+            
+            Docker: Hardware, Host, Engine, Containers live on top of this containing libs and apps.
+            
+            Benefits:
+            * Containers are more lightweight and therefore able to start much faster (seconds).
+            * Container use services exposed by the engine so no need to update multiple instances.
+            * Docker containers can be deployed on ANY host that supports Docker. There are ways of chaining yourself to a platsform however.
+
+            So how does this work.
+          </aside>
+        </section>
+
+        <section>
+          <h3>LXC</h3>
+          <p>
+            Linux Constainers: an operating-system-level virtualization method for running multiple isolated Linux systems on a single control host.
+          </p>
+          <p class="fragment"><span class="mark">namespaces</span> and <span class="mark">cgroups</span> features in the Linux kernel</p>
+          <p><span class="fragment no">ASP.NET on Linux, yeah right!</span> <span class="fragment yes">Well, actually yes!</span></p>
+          <p class="fragment">ASP.NET Core 1.0</p>
+          <p class="fragment">I'll show you...</p>
+          <aside class="notes" data-markdown>
+            Docker is based on something called Linux Containers (LXC) which is _an operating-system-level virtualization method for running multiple isolated Linux systems on a single control host_. It does not provide a virtual machine, but rather provides a virtual environment that has its own CPU, memory, block I/O, network, etc. space and the resource control mechanism. This is provided by namespaces and cgroups features in Linux kernel on LXC host. This is important because it means that containers are limited to there own resources. They can't mess with processes belonging to other containers. If a process inside a container crashes only that container will be brought down.
+            
+            As I said we aren't going to into details about this, but it is important to know about since this will impose some limitations on what kind of applications you can run in a container. Your node/python/java application will run just fine and sure you could run mono, but yeah. ASP.NET on Linux?! Well yes! Core 1.0. Which we will see shortly.
+          </aside>
+        </section>
+            
+        <section>
+          <h3>Docker is made up of</h3>
+          <ul class="flat-list">
+            <li class="fragment">The docker <strong class="mark">daemon</strong><br><em>Manages <span class="mark">containers</span> on a host</em></li>
+            <li class="fragment">The docker <strong  class="mark">CLI</strong><br><em>Commands and talks with the daemon</em></li>
+            <li class="fragment">The docker <strong  class="mark">image index</strong><br><em>A repository for docker <span class="mark">images</span></em></li>
+          </ul>
+          <aside class="notes" data-markdown>
+            But first some more Docker.
+            You can see Docker as basicaly a set of higher-level tools that handles everything that makes up an application and do this across systems and machines - virtual or physical.
+
+            The parts that make up Docker are:
+            * Daemon: The service part which hosts the containers (one or multiple). Manages network and disk access as well as act as the layer between the host system and the containers (remember the part about Linux containers).
+            * Client: A command line client for controlling the daemon and the containers
+            * Image index: A repository of premade images that are used as a base for your containers. These can be hosted on providers or even by yourself.
+          </aside>
+        </section>
+
+        <section>
+          <!--<h3>The 3 elements</h3>-->
+          <h3>Okey, so how do I use them?</h3>
+          <ul class="flat-list">
+            <li class="fragment"><strong class="mark">Docker containers</strong><br><em><span class="mark">Directories</span> containing your application</em></li>
+            <li class="fragment"><strong  class="mark">Docker images</strong><br><em><span class="mark">Snapshots</span> of containers or base OS images</em></li>
+            <li class="fragment"><strong  class="mark">Dockerfile</strong><br><em><span class="mark">Scripts</span> for automating the building of images</em></li>
+          </ul>
+          <aside class="notes" data-markdown>
+            So I have been mentioned containers and images, what are those? Well, there are 3 elements that make up Docker.
+            
+            Let's talk about the container for a bit. This is where Docker takes LXC to the next level. Since the containers are made up of directories they allow for portability and gradual build of containers. Each cointainer is layered (think of it as an onion) and each action within a container consists of putting another block - which is a simple change within the file system - on top of the previous one. This means that creating containers and making snapshots and roll-backs is very cheap on resources - kind of like a version control system for your source code.
+
+            As I said: Docker images constitute the base of docker containers from which everything starts to form.
+This is where the portability comes in play since the base image is always the same, i.e. using an Ubuntu image. Every time you build and run your container it will start of exactly the same. If you have the need you can add layers to a image by commiting changes and start a new container from that new image starting of where it left off and so on.
+            
+            Before we get into images...
+          </aside>
+        </section>
+        
+        <section>
+          <h3>Say that again</h3>
+          Image index <strong>&rArr;</strong> Images <strong>&rArr;</strong> Containers <strong>&rArr;</strong> Directories <strong>&rArr;</strong> Application
+          <aside class="notes" data-markdown>
+            The image index contains ready-made images,            
+            Which we use as a base for our container,            
+            Which is made up of layers of directories,            
+            Which make up the libraries and application.
+          </aside>
+        </section>
+
+        <section>
+          <h3>A Dockerfile</h3>
+          <pre><code data-trim data-noescape>
+FROM ubuntu:latest
+
+RUN apt-get -qq update &amp;&amp; \
+  apt-get install -qqy sqlite3 libsqlite3-dev &amp;&amp; \
+  rm -rf /var/lib/apt/lists/*
+
+COPY . /app
+WORKDIR /app
+RUN ["dnu", "restore"]
+
+EXPOSE 5000/tcp
+ENTRYPOINT ["dnx", "-p", "project.json", "web"]
+          </code></pre>
+        </section>
+        
+        <!-- COMMANDS -->
+        <!--
+        <section>
+          <h3>Client commands</h3>
+          <table>
+            <tr>
+              <td>
+                <p><code data-trim data-noescape>$ docker <strong>images</strong></code></p>
+                <p><code data-trim data-noescape>$ docker <strong>ps</strong></code></p>
+                <p><code data-trim data-noescape>$ docker <strong>build</strong> -t demo-app .</code></p>
+                <p><code data-trim data-noescape>$ docker <strong>run</strong> -p 80:5000 demo-app</code></p>
+                <p><code data-trim data-noescape>$ docker <strong>run</strong> -i ubuntu:latest</code></p>
+              </td>
+            </tr>
+          </table>
+        </section>
+        -->
+        
+        <section>
+          <h3>Enough with the slides!</h3>
+          <img src="img/cat-in-cup.jpg" />
+        </section>
+        
+        <!--<section>
+          <h3>Requirements</h3>
+          <table><tr><td>
+          <code>
+            computer.........: <span class="yes">check</span><br>
+            docker...........: <span class="yes">check</span><br>
+            docker-machine...: <span class="maybe">eee, sure?!</span><br>
+            internet.........: <span class="yes">check</span><br>
+          </code>
+          </td></tr></table>
+        </section>-->
+
+        <section>
+          <code>Insert demo here</code>
+        </section>
+        
+        <section>
+          <h3>Awesome...</h3>
+          <video src="videos/docker-now-what.mp4" autoplay loop controls></video>
+        </section>
+      
+        <section>
+          <h3>Beyond the simple</h3>
+          <p>Networking and container to container com.</p>
+          <p>Mounting directories</p>
+          <p>Multi-hosting: docker composer</p>
+          <p>Config management: Ansible, Puppet, etc.</p>
+          <p>Not. A. Silver. Bullet.</p>
+          <p>Not for every type of system</p>
+        </section>
+        
+        <section>
+          <h3>References 1/2</h3>
+          <p>Get started with Docker for windows<br> https://docs.docker.com/windows/</p>
+          <p>How to install and use Docker<br> https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-getting-started</p>
+          <p>Docker cheat sheet<br> https://github.com/wsargent/docker-cheat-sheet</p>
+        </section>
+
+        <section>
+          <h3>References 2/2</h3>
+          <p>Docker misconceptions<br> https://valdhaus.co/writings/docker-misconceptions/</p>
+          <p>ASP.NET 5 on docker<br> http://stackoverflow.com/questions/33977474/cannot-run-asp-net-5-from-docker</p>
+          <p>Overview of Docker Compose<br> https://docs.docker.com/compose/overview/</p>
+        </section>
+        
+        <section>
+          <h3>this.slides()</h3>
+          <p>http://github.banansson.com/slides/docker-demo/</p>
+        </section>
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+    <script>
+      // More info https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        history: true,
+        transitionSpeed: 'fast',
+        width: 1080,
+        //height: 700,
+        minScale: 0.2,
+        maxScale: 1.5,
+        //parallaxBackgroundImage: 'img/whale-falling.jpg',
+        //parallaxBackgroundSize: '1920px 1080px',
+
+        // More info https://github.com/hakimel/reveal.js#dependencies
+        dependencies: [
+          { src: 'plugin/markdown/marked.js' },
+          { src: 'plugin/markdown/markdown.js' },
+          { src: 'plugin/notes/notes.js', async: true },
+          { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); }},
+          { src: 'plugin/zoom-js/zoom.js', async: true },
+        ]
+      });
+    </script>
+  </body>
+</html>
+          </table>

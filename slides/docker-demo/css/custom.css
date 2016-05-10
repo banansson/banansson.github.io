@@ -1,0 +1,21 @@
+.reveal section img {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+.reveal section { font-size: 1.0em; }
+.reveal pre { box-shadow: none; }
+.reveal li { margin-bottom: 20px; }
+.reveal h3.seperator { border-bottom: 2px solid #999; }
+.reveal h3.yes { border-bottom: 2px solid #9c9; }
+.reveal h3.no { border-bottom: 2px solid #c66; }
+
+.reveal ul.flat-list { list-style: none; margin: 0; }
+.reveal ul.flat-list-100 { list-style: none; width: 100%; margin: 0; }
+
+.reveal .mark { color: #69c; }
+.reveal em span.mark { color: #9c6; }
+.reveal .yes { color: #9c6; }
+.reveal .no { color: #c66; }
+.reveal .maybe { color: #cc6; }
+.simon { float: left; position: absolute; bottom: 0; left: 0; }
